@@ -1,0 +1,25 @@
+{
+  "name": "caps",
+  "version": "1.0.0",
+  "description": "## Phase 1 ### Users stories",
+  "main": "caps.js",
+  "scripts": {
+    "start": "node caps.js",
+    "watch": "nodemon caps.js",
+    "test-watch": "jest --watchAll",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lulusevignon-401-advanced-javascript/caps.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lulusevignon-401-advanced-javascript/caps/issues"
+  },
+  "homepage": "https://github.com/lulusevignon-401-advanced-javascript/caps#readme",
+  "dependencies": {
+    "jest": "^26.4.2"
+  }
+}
