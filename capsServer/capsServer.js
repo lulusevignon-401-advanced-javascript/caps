@@ -9,19 +9,19 @@ const port = process.env.PORT || 3001;
 
 const server = net.createServer();
 
-// events.on('pickup', payload => logEvent('pickup', payload));
-// events.on('in-transit', payload => logEvent('in-transit', payload));
-// events.on('delivered', payload => logEvent('delivered', payload));
+// server.on('pickup', payload => logEvent('pickup', payload));
+// server.on('in-transit', payload => logEvent('in-transit', payload));
+// server.on('delivered', payload => logEvent('delivered', payload));
 
 server.listen(port, () => console.log(`Server up on PORT ${port}`));
 
 let socketPool = {};
 
 server.on('connection', socket =>{
-  socket.id = `totallyNotProductionGradeID ${Math.random()}`;
+  socket.id = `Socket-ID ${Math.random()}`;
   socketPool[socket.id] = socket;
 
-  console.log('connection', socketPool);
+  // console.log('connection', socketPool);
 
   socket.on('data', buffer => onMessageReceived(buffer.toString()));
 

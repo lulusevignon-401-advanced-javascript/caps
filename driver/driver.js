@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').config();
+
 const inquirer = require('inquirer');
 const net = require('net');
 
@@ -11,7 +13,23 @@ client.connect(port, host, () => {
   console.log('Driver successfully connected to', host, ':', port);
 });
 
+client.on('data', buffer =>{
+  let raw = buffer.toString();
+  let order = JSON.parse(raw);
+  if(order.event === 'pickup'){
+    pickupOrder(order);
+  }
+});
 
+function pickupOrder(order){
+  setTimeout(() =>{
+    let newOrder = {
+      event: 'in-transit',
+      payload: order.payload,
+    };
+    console.log('picking up', newOrder.payload.orderID);
+  }, 1000);
+} 
 // emitter.on('pickup', inTransitHandler);
 // emitter.on('in-transit', deliveredHandler);
 
@@ -26,6 +44,6 @@ client.connect(port, host, () => {
 // function deliveredHandler(order){
 //   setTimeout(()=>{
 //     console.log(`DRIVER: delivered ${order.orderID}`);
-//     emitter.emit('delivered', order);
+//     socket.emit('delivered', order);
 //   }, 3000);
-// }
+// };

@@ -14,27 +14,44 @@ client.connect(port, host, () => {
   console.log('Vendor successfully connected to', host, ':', port);
 });
 
-let storeName = process.env.STORE_NAME;
+let storeName = process.env.STORE_NAME || 'Lulu\'s';
 let customerName = faker.name.firstName();
 let orderID = faker.random.number();
 let address = faker.address.streetAddress();
 
 const orders = {
+  event: 'pickup',
+  time: new Date(),
+  payload: {
   storeName: storeName,
   orderID: orderID, 
   customerName: customerName, 
   address: address,
-};
+}
+} 
 
 
-// emitter.on('delivered', (payload) =>{
-//   console.log(`VENDOR: Thank you for delivering ${payload.orderID}`);
-// });
+client.on('data', buffer =>{
+  
+  setInterval( function(message){
+    socket.send('pickup', newOrder);
+    let payload = JSON.stringify(message);
+     for (let socket in socketPool) {
+     socketPool[socket].write(payload)
+     }
+   }, 5000);
+  
+});
 
-// function start(){
-//   setInterval(()=>{
-//     emitter.emit('pickup', orders);
-//   }, 5000);
-// }
 
-// start();
+
+
+client.on('delivered', function (payload) {
+  let event = JSON.parse(payload);
+  console.log(`Thank you for delivering ${event.event}, ${payload.orderID}`);
+});
+
+
+
+
+
