@@ -15,7 +15,7 @@ function inTransitHandler(order){
 
 function deliveredHandler(order){
   setTimeout(()=>{
-    console.log(`DRIVER: delivered' ${order.orderID}`);
+    console.log(`DRIVER: delivered ${order.orderID}`);
     emitter.emit('delivered', order);
   }, 3000);
 }

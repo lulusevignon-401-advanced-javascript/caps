@@ -12,7 +12,7 @@ events.on('delivered', payload => log('delivered', payload));
 
 function log(event,payload){
   let time = new Date();
-  console.log('EVENT', {event, payload});
+  console.log('EVENT', {event, time, payload});
 }
 
 module.exports = log;
