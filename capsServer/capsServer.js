@@ -38,19 +38,19 @@ caps.on('connection', (socket)=>{
   });
 
   socket.on('pickup', (payload) =>{
-    caps.to('vendorFile').emit('pickup', payload);
+    caps.emit('pickup', payload);
     console.log('pickup order', payload);
     // console.log('Event', payload);
   });
 
   socket.on('in-transit', (payload) =>{
-    caps.to('driverFile').emit('in-transit', payload);
+    caps.to(process.env.STORE_NAME).emit('in-transit', payload);
     console.log('in-transit order', payload);
     // console.log('Event', payload);
   });
 
   socket.on('delivered', (payload) =>{
-    caps.to('driverFile').emit('delivered', payload);
+    caps.to(process.env.STORE_NAME).emit('delivered', payload);
     console.log('delivered order', payload);
     // console.log('Event', payload);
   });
