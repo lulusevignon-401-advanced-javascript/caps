@@ -19,7 +19,7 @@ setInterval(()=>{
     
   const order = {
       time: new Date(),
-      storeName: process.env.STORE_NAME || 'Lulu\'s',
+      storeName: process.env.STORE_NAME || '1-206-flowers',
       orderID: faker.random.number(), 
       customerName: faker.name.firstName(), 
       address: faker.address.streetAddress(),
