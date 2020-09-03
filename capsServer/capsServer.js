@@ -1,58 +1,58 @@
 'use strict';
 
 require('dotenv').config();
-const net = require('net');
+// const net = require('net');
 // const { Socket } = require('dgram');
 
+const io = require('socket.io')(process.env.PORT || 3001);
+// console.log('server running on', io);
 
-const port = process.env.PORT || 3001;
+// io.on('connection', (socket) => {
+//   console.log('CONNECTED', socket.id);
 
-const server = net.createServer();
+//   socket.on('pickup', (payload) => {
+//     console.log('ready for pickup', payload);
+//     io.emit('pickup', payload);
+//   });
 
-// server.on('pickup', payload => logEvent('pickup', payload));
-// server.on('in-transit', payload => logEvent('in-transit', payload));
-// server.on('delivered', payload => logEvent('delivered', payload));
+//   socket.on('in-transit', (payload) => {
+//     io.emit('in-transit', payload);
+//   });
 
-server.listen(port, () => console.log(`Server up on PORT ${port}`));
+//   socket.on('delivered', (payload) => {
+//     io.emit('delivered', payload);
+//   });
 
-let socketPool = {};
+// }); 
 
-server.on('connection', socket =>{
-  socket.id = `Socket-ID ${Math.random()}`;
-  socketPool[socket.id] = socket;
 
-  // console.log('connection', socketPool);
+const caps = io.of('/caps');
 
-  socket.on('data', buffer => onMessageReceived(buffer.toString()));
+caps.on('connection', (socket)=>{
 
-  socket.on('close', () => deleteSocket(socket.id));
+  console.log('CAPS ROOM', socket.id);
+
+  socket.on('join', room =>{
+    console.log('joined', room);
+    socket.join(room);
+  });
+
+  socket.on('pickup', (payload) =>{
+    caps.to('vendorFile').emit('pickup', payload);
+    console.log('pickup order', payload);
+    // console.log('Event', payload);
+  });
+
+  socket.on('in-transit', (payload) =>{
+    caps.to('driverFile').emit('in-transit', payload);
+    console.log('in-transit order', payload);
+    // console.log('Event', payload);
+  });
+
+  socket.on('delivered', (payload) =>{
+    caps.to('driverFile').emit('delivered', payload);
+    console.log('delivered order', payload);
+    // console.log('Event', payload);
+  });
+
 });
-
-function onMessageReceived(str){
-
-  // const raw = buffer.toString();
-
-  logEvent(str);
-  broadcast(str);
-}
-
-function logEvent(str){
-
-  const messageObj = JSON.parse(str);
-  const event = messageObj.event;
-  const time = new Date();
-  const payload = messageObj.payload;
-
-  console.log('EVENT', {event, time, payload});
-}
-
-function broadcast(str){
-  for (let key in socketPool){
-    const socket = socketPool[key];
-    socket.write(str);
-  }
-}
-
-function deleteSocket(id){
-  delete socketPool[id];
-}
