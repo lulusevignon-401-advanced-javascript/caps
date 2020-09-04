@@ -1,6 +1,6 @@
 # caps
 
-version: "1.0.3"
+version: "1.0.4"
 
 
 ### Users stories

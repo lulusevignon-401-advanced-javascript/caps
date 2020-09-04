@@ -2,6 +2,7 @@
 
 require('dotenv').config();
 
+const {v4:uuid} = require('uuid');
 const io = require('socket.io')(process.env.PORT || 3001);
 // console.log('server running on', io);
 
@@ -24,14 +25,9 @@ const io = require('socket.io')(process.env.PORT || 3001);
 // }); 
 
 const messages = {
+// waiting for messages to queue
 
-  pickup: {
-
-    driver: {
-
-    }
-  }
-}
+};
 
 
 const caps = io.of('/caps');
@@ -48,25 +44,25 @@ caps.on('connection', (socket)=>{
   socket.on('received', orderID =>{
     //delete messages
 
-    delete messages.pickup.driver[orderID];
+    delete messages[orderID];
     console.log('deleting', orderID, messages);
   });
 
   socket.on('getAll', () =>{
-    for(let id in messages.pickup.driver){
-      const payload = messages.pickup.driver[id];
+    for(let id in messages){
+      const payload = messages[id];
       caps.emit('pickup', payload);
     }
   });
 
   socket.on('pickup', (payload) =>{
 
-    messages.pickup.driver[payload.orderID] = payload;
+    messages[payload.orderID] = payload;
 
     logIt('pickup', payload);
     caps.emit('pickup', payload);
     // console.log('pickup order', payload);
-    console.log('pickup order', Object.keys(messages.pickup.driver).length);
+    console.log('pickup order', Object.keys(messages).length);
     // console.log('Event', payload);
   });
 
