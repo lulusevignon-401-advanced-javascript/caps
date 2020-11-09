@@ -15,17 +15,17 @@ vendorSocket.on('delivered', (payload)=>{
 })
 
 
-// setInterval(()=>{
+setInterval(()=>{
     
-//   const order = {
-//       // time: new Date(),
-//       storeName: process.env.STORE_NAME || '1-206-flowers',
-//       orderID: faker.random.number(), 
-//       customerName: faker.name.firstName(), 
-//       address: faker.address.streetAddress(),
-//   };
+  const order = {
+      // time: new Date(),
+      storeName: process.env.STORE_NAME || '1-206-flowers',
+      orderID: faker.random.number(), 
+      customerName: faker.name.firstName(), 
+      address: faker.address.streetAddress(),
+  };
 
-//   vendorSocket.emit('pickup', (order));       
+  vendorSocket.emit('pickup', (order));       
     
-// }, 5000)
+}, 5000)
   
